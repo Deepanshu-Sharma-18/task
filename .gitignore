@@ -33,3 +33,5 @@ build/
 .vscode/
 
 .env
+/k8s/mysql-secrets.yml
+/k8s/backend-sercrets.yml

@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: task-backend
+          image: deepshx/task-backend:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql:3306/task_db
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: SPRING_DATASOURCE_USERNAME
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: SPRING_DATASOURCE_PASSWORD
+            - name: SPRING_JPA_HIBERNATE_DDL_AUTO
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: SPRING_JPA_HIBERNATE_DDL_AUTO
+            - name: SPRING_JPA_SHOW_SQL
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: SPRING_JPA_SHOW_SQL
+            - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+              value: com.mysql.cj.jdbc.Driver
+            - name: SPRING_JPA_DATABASE_PLATFORM
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: JWT_SECRET
